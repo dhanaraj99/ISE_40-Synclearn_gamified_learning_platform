@@ -1,0 +1,299 @@
+================================================================================
+  SYNCLEARN API DOCUMENTATION
+  Base URL: http://localhost:8000/api
+  Auth: Bearer Token (JWT) in Authorization header
+  Content-Type: application/json
+================================================================================
+
+RESPONSE ENVELOPE (all endpoints)
+----------------------------------
+Success:
+  {
+    "success": true,
+    "statusCode": 200,
+    "message": "...",
+    "data": { ... }
+  }
+
+Error:
+  {
+    "success": false,
+    "statusCode": 4xx | 5xx,
+    "message": "...",
+    "errors": null | [...]
+  }
+
+
+================================================================================
+  ADMIN ROUTES   →  /api/admin
+================================================================================
+
+1. REGISTER ADMIN
+-----------------
+POST /api/admin/register
+Auth: None (open — bootstrap only)
+
+Request Body:
+  {
+    "name":     "John Doe",        (required)
+    "email":    "john@email.com",  (required, unique)
+    "password": "secret123"        (required)
+  }
+
+Success 201:
+  {
+    "data": {
+      "id":    "<mongoId>",
+      "name":  "John Doe",
+      "email": "john@email.com",
+      "role":  "admin"
+    }
+  }
+
+Errors:
+  409 - Admin with this email already exists
+
+
+--------------------------------------------------------------------------------
+
+2. ADMIN LOGIN
+--------------
+POST /api/admin/login
+Auth: None (open)
+
+Request Body:
+  {
+    "email":    "john@email.com",  (required)
+    "password": "secret123"        (required)
+  }
+
+Success 200:
+  {
+    "data": {
+      "token": "<JWT>",
+      "user": {
+        "id":    "<mongoId>",
+        "name":  "John Doe",
+        "email": "john@email.com",
+        "role":  "admin"
+      }
+    }
+  }
+
+Errors:
+  404 - Admin not found
+  401 - Invalid credentials
+
+
+--------------------------------------------------------------------------------
+
+3. ADD TEACHER  (admin only)
+----------------------------
+POST /api/admin/add-teacher
+Auth: Bearer <admin_token>
+
+Request Body:
+  {
+    "name":     "Jane Smith",        (required)
+    "email":    "jane@email.com",    (required, unique)
+    "password": "secret123",         (required)
+    "classes":  ["10A", "11B"],      (required, array of strings)
+    "subject":  "Mathematics"        (required)
+  }
+
+Success 201:
+  {
+    "data": {
+      "id":      "<mongoId>",
+      "name":    "Jane Smith",
+      "email":   "jane@email.com",
+      "classes": ["10A", "11B"],
+      "subject": "Mathematics",
+      "role":    "teacher"
+    }
+  }
+
+Errors:
+  401 - No token provided / Invalid or expired token
+  403 - Access denied. Required role(s): admin
+  409 - Teacher with this email already exists
+
+
+--------------------------------------------------------------------------------
+
+4. ADD STUDENT  (admin only)
+-----------------------------
+POST /api/admin/add-student
+Auth: Bearer <admin_token>
+
+Request Body:
+  {
+    "name":       "Alice Kumar",    (required)
+    "email":      "alice@email.com",(required, unique)
+    "password":   "secret123",      (required)
+    "class":      "10A",            (required)
+    "rollNumber": "23"              (required)
+  }
+
+Success 201:
+  {
+    "data": {
+      "id":         "<mongoId>",
+      "name":       "Alice Kumar",
+      "email":      "alice@email.com",
+      "class":      "10A",
+      "rollNumber": "23",
+      "totalScore": 0,
+      "role":       "student"
+    }
+  }
+
+Errors:
+  401 - No token provided / Invalid or expired token
+  403 - Access denied. Required role(s): admin
+  409 - Student with this email already exists
+
+
+================================================================================
+  TEACHER ROUTES   →  /api/teacher
+================================================================================
+
+5. TEACHER LOGIN
+----------------
+POST /api/teacher/login
+Auth: None (open)
+
+Request Body:
+  {
+    "email":    "jane@email.com",  (required)
+    "password": "secret123"        (required)
+  }
+
+Success 200:
+  {
+    "data": {
+      "token": "<JWT>",
+      "user": {
+        "id":      "<mongoId>",
+        "name":    "Jane Smith",
+        "email":   "jane@email.com",
+        "classes": ["10A", "11B"],
+        "subject": "Mathematics",
+        "role":    "teacher"
+      }
+    }
+  }
+
+Errors:
+  404 - Teacher not found
+  401 - Invalid credentials
+
+
+--------------------------------------------------------------------------------
+
+6. ADD STUDENT  (teacher only)
+-------------------------------
+POST /api/teacher/add-student
+Auth: Bearer <teacher_token>
+
+Request Body:
+  {
+    "name":       "Bob Sharma",    (required)
+    "email":      "bob@email.com", (required, unique)
+    "password":   "secret123",     (required)
+    "class":      "10A",           (required)
+    "rollNumber": "24"             (required)
+  }
+
+Success 201:
+  {
+    "data": {
+      "id":         "<mongoId>",
+      "name":       "Bob Sharma",
+      "email":      "bob@email.com",
+      "class":      "10A",
+      "rollNumber": "24",
+      "totalScore": 0,
+      "role":       "student"
+    }
+  }
+
+Errors:
+  401 - No token provided / Invalid or expired token
+  403 - Access denied. Required role(s): teacher
+  409 - Student with this email already exists
+
+
+================================================================================
+  STUDENT ROUTES   →  /api/student
+================================================================================
+
+7. STUDENT LOGIN
+----------------
+POST /api/student/login
+Auth: None (open)
+
+Request Body:
+  {
+    "email":    "alice@email.com",  (required)
+    "password": "secret123"         (required)
+  }
+
+Success 200:
+  {
+    "data": {
+      "token": "<JWT>",
+      "user": {
+        "id":         "<mongoId>",
+        "name":       "Alice Kumar",
+        "email":      "alice@email.com",
+        "class":      "10A",
+        "rollNumber": "23",
+        "totalScore": 0,
+        "role":       "student"
+      }
+    }
+  }
+
+Errors:
+  404 - Student not found
+  401 - Invalid credentials
+
+
+================================================================================
+  JWT TOKEN DETAILS
+================================================================================
+
+Payload:  { "id": "<mongoId>", "role": "admin|teacher|student" }
+Expiry:   1 hour
+Header:   Authorization: Bearer <token>
+
+Role Access Matrix:
+  Endpoint                        admin   teacher   student
+  -------                         -----   -------   -------
+  POST /api/admin/add-teacher       ✓        -         -
+  POST /api/admin/add-student       ✓        -         -
+  POST /api/teacher/add-student     -        ✓         -
+
+
+================================================================================
+  GLOBAL ERROR CODES
+================================================================================
+
+  400  Bad Request         - Missing or invalid fields
+  401  Unauthorized        - Missing, invalid or expired token / wrong password
+  403  Forbidden           - Valid token but insufficient role
+  404  Not Found           - User does not exist
+  409  Conflict            - Email already registered
+  500  Internal Server Error
+
+================================================================================
+  ENV VARIABLES REQUIRED
+================================================================================
+
+  PORT=8000
+  MONGO_URI=mongodb://...
+  JWT_SECRET=your_secret_key
+  BASE_URL=/api/
+
+================================================================================

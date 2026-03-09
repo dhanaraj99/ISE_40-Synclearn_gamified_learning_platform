@@ -1,0 +1,65 @@
+SyncLearn Project Summary
+=========================
+
+Overview
+--------
+SyncLearn is a full-stack, real-time MERN educational platform featuring role-based access for Admins, Teachers, and Students. It consists of multiple client applications that interact with a central Express/MongoDB server.
+
+Monorepo Architecture
+---------------------
+1. /Server - Backend REST API & Socket.io Server (Node.js, Express, MongoDB, Socket.io)
+2. /client - Student Web Portal (React 18, Vite, TailwindCSS)
+3. /website - Teacher & Admin Web Portal (React 18, Vite, TailwindCSS)
+4. /App/student - Student Mobile App (React Native, Expo)
+5. /App/teacher - Teacher & Admin Mobile App (React Native, Expo)
+6. /shared - Shared utilities and hooks (e.g., useMissionLock.js)
+
+Core Features
+-------------
+1. Role-Based Authentication & Authorization (JWT):
+   - Distinct login flows and portals for Students, Teachers, and Admins.
+   - Private, token-gated routes on both web and mobile frontends.
+   - Axios interceptors that globally handle 401 Unauthorized errors by clearing local storage and redirecting.
+   - JWT tokens are signed securely and expire in 1 hour. Passwords are encrypted via bcrypt.
+
+2. User Management (Admin & Teacher Capabilities):
+   - Admins can create new users (Teachers and Students).
+   - Teachers can manage their enrolled Students.
+   - Admins can formulate global "Broadcasts" (Announcements) that are displayed on Student dashboards.
+
+3. Mission (Lesson) Content Creation:
+   - Teachers can create, read, update, and delete Lessons.
+   - Lessons include titles, text-based content, and are sorted by categories.
+   - Teacher ownership is strictly enforced at the backend service layer (you can only edit your own lessons unless you are an Admin).
+
+4. Quizzes & Auto-Scoring:
+   - Teachers can attach Quizzes containing multiple-choice questions to their Lessons.
+   - Built-in cheating prevention: The `correctAns` field is stripped out before the quiz is sent to the Student.
+   - When a Student submits a Quiz, the backend automatically scores it out of the total questions, calculates the percentage, and records the `QuizAttempt`.
+   - The Student's global XP / `totalScore` is accumulated for leaderboard and ranking purposes.
+
+5. Gamification & Mission Progression (New):
+   - Lessons can assigned a `sequenceOrder` integer.
+   - "Mission Progression" enforces that a Student cannot access lesson `sequenceOrder: 2` until they successfully attain an 80% passing grade on the Quiz attached to lesson `sequenceOrder: 1`.
+   - Backend dynamically determines if a lesson is `isLocked` for the requesting student, which is then handled by the shared `useMissionLock` hook across web/mobile clients.
+   - Lessons can be flagged as special `isBounty` missions for bonus XP points.
+   - Rich UI feedback like Confetti upon completing missions and XP visualizations.
+
+6. 1V1 Real-Time Multiplayer Duels (New):
+   - Built with WebSockets (Socket.io) attached directly to the Express HTTP Server.
+   - Matchmaking: Students can queue up for a specific lesson's "Duel", and the server will automatically pair them into a private `roomId`.
+   - Authentication over Websockets: Socket handshake is secured using the Student's login JWT.
+   - Real-Time Progression Bars: As Students select answers, their inputs are verified by the server securely, and the score updates are broadcasted to both players instantly.
+   - Duel UI is seamlessly integrated into both the React Web Portal and the React Native application.
+
+Technical Stack & Dependencies
+------------------------------
+- Backend: Node.js, Express.js, Mongoose/MongoDB, Socket.io, JsonWebToken, BcryptJS, Dotenv, Cors.
+- Frontend (Web): React 18, Vite, React Router v6, Axios, Canvas-Confetti, React-Hot-Toast, TailwindCSS.
+- Frontend (Mobile): React Native 0.74, Expo SDK 51, Expo Router, NativeWind, AsyncStorage, Socket.io-client.
+
+Security Profile
+----------------
+- `password` field uses `select: false` within Mongoose, preventing accidental data leaks on user queries.
+- `Quiz` questions sent to clients do NOT contain the correct answers. They are securely evaluated on the `submit` route.
+- Robust middleware ensures only Admins edit global state, only Teachers modify their own courses, and only Students submit attempts or join Duels.
