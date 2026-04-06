@@ -24,7 +24,7 @@ const seedBadges = async () => {
         await BadgeModel.findOneAndUpdate(
             { name: badge.name },
             badge,
-            { upsert: true, new: true }
+            { upsert: true, returnDocument: "after" }
         )
     }
     console.log("Badges seeded")

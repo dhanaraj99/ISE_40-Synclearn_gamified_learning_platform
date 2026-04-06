@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import fetchClient from './fetchClient';
 import { API_ROUTES } from '../constants/apiEndpoints';
 
 /**
@@ -14,13 +14,13 @@ import { API_ROUTES } from '../constants/apiEndpoints';
  * @param {{ name, email, password, subject, classes: string[] }} payload
  */
 export const addTeacher = async (payload) => {
-    const { data } = await axiosClient.post(API_ROUTES.ADMIN.ADD_TEACHER, payload);
+    const { data } = await fetchClient.post(API_ROUTES.ADMIN.ADD_TEACHER, payload);
     return data;
 };
 
 /** Get all teachers list (admin only) */
 export const listTeachers = async () => {
-    const { data } = await axiosClient.get(API_ROUTES.ADMIN.LIST_TEACHERS);
+    const { data } = await fetchClient.get(API_ROUTES.ADMIN.LIST_TEACHERS);
     return data;
 };
 
@@ -35,12 +35,12 @@ export const addStudent = async (payload, role = 'teacher') => {
     const endpoint = role === 'admin'
         ? API_ROUTES.ADMIN.ADD_STUDENT
         : API_ROUTES.TEACHER.ADD_STUDENT;
-    const { data } = await axiosClient.post(endpoint, payload);
+    const { data } = await fetchClient.post(endpoint, payload);
     return data;
 };
 
 /** Get all students list (admin only via admin/students endpoint) */
 export const listStudents = async () => {
-    const { data } = await axiosClient.get(API_ROUTES.ADMIN.LIST_STUDENTS);
+    const { data } = await fetchClient.get(API_ROUTES.ADMIN.LIST_STUDENTS);
     return data;
 };

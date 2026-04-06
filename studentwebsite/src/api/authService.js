@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import fetchClient from './fetchClient';
 import { API_ROUTES } from '../constants/apiEndpoints';
 
 /**
@@ -10,7 +10,7 @@ import { API_ROUTES } from '../constants/apiEndpoints';
  */
 
 export const loginStudent = async (credentials) => {
-    const response = await axiosClient.post(API_ROUTES.AUTH.LOGIN, credentials);
+    const response = await fetchClient.post(API_ROUTES.AUTH.LOGIN, credentials);
     const { token, user } = response.data.data;   // ← unwrap the nested `data`
 
     localStorage.setItem('token', token);
@@ -20,7 +20,7 @@ export const loginStudent = async (credentials) => {
 };
 
 export const getStudentProfile = async () => {
-    const { data } = await axiosClient.get(API_ROUTES.STUDENTS.PROFILE);
+    const { data } = await fetchClient.get(API_ROUTES.STUDENTS.PROFILE);
     return data;
 };
 

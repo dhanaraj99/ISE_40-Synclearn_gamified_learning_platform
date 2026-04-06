@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import fetchClient from './fetchClient';
 import { API_ROUTES } from '../constants/apiEndpoints';
 
 /**
@@ -10,7 +10,7 @@ import { API_ROUTES } from '../constants/apiEndpoints';
  */
 
 export const loginTeacher = async (credentials) => {
-    const response = await axiosClient.post(API_ROUTES.AUTH.TEACHER_LOGIN, credentials);
+    const response = await fetchClient.post(API_ROUTES.AUTH.TEACHER_LOGIN, credentials);
     const { token, user } = response.data.data;   // ← unwrap the nested `data`
 
     localStorage.setItem('token', token);
@@ -20,7 +20,7 @@ export const loginTeacher = async (credentials) => {
 };
 
 export const loginAdmin = async (credentials) => {
-    const response = await axiosClient.post(API_ROUTES.AUTH.ADMIN_LOGIN, credentials);
+    const response = await fetchClient.post(API_ROUTES.AUTH.ADMIN_LOGIN, credentials);
     const { token, user } = response.data.data;   // ← unwrap the nested `data`
 
     localStorage.setItem('token', token);
@@ -30,14 +30,14 @@ export const loginAdmin = async (credentials) => {
 };
 
 export const addTeacher = async (teacherData) => {
-    const { data } = await axiosClient.post(API_ROUTES.ADMIN.ADD_TEACHER, teacherData);
+    const { data } = await fetchClient.post(API_ROUTES.ADMIN.ADD_TEACHER, teacherData);
     return data;
 };
 
 export const addStudent = async (studentData, role = 'teacher') => {
     const endpoint =
         role === 'admin' ? API_ROUTES.ADMIN.ADD_STUDENT : API_ROUTES.TEACHER.ADD_STUDENT;
-    const { data } = await axiosClient.post(endpoint, studentData);
+    const { data } = await fetchClient.post(endpoint, studentData);
     return data;
 };
 

@@ -103,7 +103,7 @@ const updateLesson = async (id, userId, role, updates) => {
     if (updates.sequenceOrder !== undefined) allowedUpdates.sequenceOrder = updates.sequenceOrder;
     if (updates.isBounty !== undefined) allowedUpdates.isBounty = updates.isBounty;
 
-    const updated = await LessonModel.findByIdAndUpdate(id, allowedUpdates, { new: true })
+    const updated = await LessonModel.findByIdAndUpdate(id, allowedUpdates, { returnDocument: "after" })
     return serviceOk("Lesson updated", updated)
 }
 
