@@ -19,6 +19,11 @@ app.use(`${baseUrl}badge`, require("./Routes/BadgeRoute"))
 app.use(`${baseUrl}leaderboard`, require("./Routes/LeaderboardRoute"))
 app.use(`${baseUrl}daily-quests`, require("./Routes/DailyQuestRoute"))
 app.use(`${baseUrl}tournament`, require("./Routes/TournamentRoute"))
+app.use(`${baseUrl}videos`, require("./Routes/VideoClassRoute"))
+
+// Serve uploads folder statically
+const path = require("path")
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")))
 
 // Global error handler — must be LAST
 app.use(require("./Middleware/errorHandler"))

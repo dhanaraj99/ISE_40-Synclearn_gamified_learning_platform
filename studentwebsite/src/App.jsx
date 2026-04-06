@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage';
 import MissionsPage from './pages/MissionsPage';
 import ProfilePage from './pages/ProfilePage';
 import TournamentPage from './pages/TournamentPage';
+import VideoClassesPage from './pages/VideoClassesPage';
 
 const App = () => {
   return (
@@ -57,6 +58,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <TournamentPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/videos"
+          element={
+            <PrivateRoute>
+              <VideoClassesPage />
             </PrivateRoute>
           }
         />

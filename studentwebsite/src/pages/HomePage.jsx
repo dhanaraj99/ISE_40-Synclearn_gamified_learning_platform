@@ -287,6 +287,7 @@ const HomePage = () => {
         { label: 'My Missions', icon: '🎯', path: '/missions', desc: 'View lessons & take quizzes' },
         { label: 'My Profile', icon: '👤', path: '/profile', desc: 'View stats, badges & progress' },
         { label: 'Tournaments', icon: '🏆', path: '/tournaments', desc: 'Join competitive tournaments' },
+        { label: 'Video Classes', icon: '📺', path: '/videos', desc: 'Watch recorded video lessons' },
     ];
 
     return (

@@ -9,6 +9,8 @@ import MissionControlPage from './pages/MissionControlPage';
 import AnnouncementsPage from './pages/AnnouncementsPage';
 import ManageTeachersPage from './pages/ManageTeachersPage';
 import ManageStudentsPage from './pages/ManageStudentsPage';
+import TeacherVideoUploadPage from './pages/TeacherVideoUploadPage';
+import TeacherVideoListPage from './pages/TeacherVideoListPage';
 
 const App = () => {
   return (
@@ -24,6 +26,8 @@ const App = () => {
         <Route path="/announcements" element={<PrivateRoute><AnnouncementsPage /></PrivateRoute>} />
         <Route path="/teachers" element={<PrivateRoute><ManageTeachersPage /></PrivateRoute>} />
         <Route path="/students" element={<PrivateRoute><ManageStudentsPage /></PrivateRoute>} />
+        <Route path="/upload-video" element={<PrivateRoute><TeacherVideoUploadPage /></PrivateRoute>} />
+        <Route path="/my-videos" element={<PrivateRoute><TeacherVideoListPage /></PrivateRoute>} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

@@ -7,11 +7,13 @@ const ADMIN_QUICK_LINKS = [
     { label: 'Teachers', icon: '👨‍🏫', path: '/teachers', desc: 'Recruit & manage faculty', color: 'from-violet-500 to-purple-600' },
     { label: 'Students', icon: '🎓', path: '/students', desc: 'Enroll student recruits', color: 'from-blue-500 to-indigo-600' },
     { label: 'Broadcasts', icon: '📡', path: '/announcements', desc: 'Push global announcements', color: 'from-pink-500 to-rose-600' },
+    { label: 'Manage Videos', icon: '📺', path: '/my-videos', desc: 'Manage uploaded classes', color: 'from-orange-500 to-red-500' },
 ];
 
 const TEACHER_QUICK_LINKS = [
     { label: 'Mission Control', icon: '🎯', path: '/missions', desc: 'Deploy lessons & quizzes', color: 'from-emerald-500 to-teal-500' },
     { label: 'Students', icon: '🎓', path: '/students', desc: 'Add students to your class', color: 'from-blue-500 to-indigo-600' },
+    { label: 'Manage Videos', icon: '📺', path: '/my-videos', desc: 'Manage uploaded classes', color: 'from-orange-500 to-red-500' },
 ];
 
 const HomePage = () => {
